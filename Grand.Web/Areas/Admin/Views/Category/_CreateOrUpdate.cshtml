@@ -1,0 +1,58 @@
+﻿@model CategoryModel
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<admin-tabstrip name="category-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Catalog.Categories.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Common.SEO")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabSeo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Categories.Products")" tab-index="2">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabProducts" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Categories.Discounts")" tab-index="3">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabDiscounts" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Categories.Acl")" tab-index="4">
+            <content>
+                <div>
+                    <partial name="_TabAcl" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Categories.Stores")" tab-index="5">
+            <content>
+                <div>
+                    <partial name="_TabStores" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Catalog.Categories.ActivityLog")" tab-index="6">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabActivityLog" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <vc:admin-widget widget-zone="category_details_tabs" additional-data="Model" />
+    </items>
+</admin-tabstrip>

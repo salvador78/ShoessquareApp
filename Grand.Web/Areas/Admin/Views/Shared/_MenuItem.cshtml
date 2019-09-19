@@ -1,0 +1,67 @@
+﻿@model SiteMapNode
+@using Grand.Core
+@using Grand.Framework.Menu
+@inject IWebHelper webHelper
+
+@{
+    string url = "javascript:;";
+    if (!string.IsNullOrEmpty(Model.ControllerName) && !string.IsNullOrEmpty(Model.ActionName))
+    {
+        url = Url.Action(Model.ActionName, Model.ControllerName, Model.RouteValues, null, null);
+
+        string test = webHelper.GetRawUrl(this.Context.Request).ToLowerInvariant();
+    }
+    else if (!string.IsNullOrEmpty(Model.Url))
+    {
+        url = Model.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(Model.Url) : Model.Url;
+
+        string test = webHelper.GetRawUrl(this.Context.Request).ToLowerInvariant();
+
+    }
+
+    <li>
+        @{
+            var childNodes = Model.ChildNodes.Where(x => x.Visible).ToList();
+        }
+        @if (childNodes.Any())
+        {
+            <a class="nav-link">
+                @if (!String.IsNullOrEmpty(Model.IconClass))
+                {
+                    <i class="@Model.IconClass"></i>
+                }
+                <span class="title">@Model.Title</span>
+                @if (childNodes.Any())
+                {
+                    <span class="fa fa-chevron-down"></span>
+                }
+
+            </a>
+        }
+        else
+        {
+            <a href="@url" class="nav-link">
+                @if (!String.IsNullOrEmpty(Model.IconClass))
+                {
+                    <i class="@Model.IconClass"></i>
+                }
+                <span class="title">@Model.Title</span>
+                @if (childNodes.Any())
+                {
+                    <span class="fa fa-chevron-down"></span>
+                }
+
+            </a>
+        }
+
+        @if (childNodes.Any())
+        {
+            <ul class="nav child_menu">
+                @foreach (var childItem in childNodes)
+                {
+                    <partial name="_MenuItem" model="childItem" />
+                }
+            </ul>
+        }
+    </li>
+}

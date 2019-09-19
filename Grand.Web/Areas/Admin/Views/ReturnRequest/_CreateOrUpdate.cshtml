@@ -1,0 +1,28 @@
+﻿@model ReturnRequestModel
+@inject AdminAreaSettings adminAreaSettings
+@inject OrderSettings orderSettings
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<admin-tabstrip name="returnrequest-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.ReturnRequests.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        @if (orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
+        {
+            <tabstrip-item text="@T("Admin.ReturnRequests.Address")" tab-index="1">
+                <content>
+                    <div>
+                        <partial name="_CreateOrUpdate.TabAddress" model="Model" />
+                    </div>
+                </content>
+            </tabstrip-item>
+        }
+        <vc:admin-widget widget-zone="returnrequest_details_tabs" additional-data="Model" />
+    </items>
+</admin-tabstrip>

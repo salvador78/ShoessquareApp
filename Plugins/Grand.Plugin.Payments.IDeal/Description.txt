@@ -1,0 +1,8 @@
+﻿Group: Payment methods
+FriendlyName: IDeal
+SystemName: Payments.IDeal
+Version: 1.08
+SupportedVersions: 4.50
+Author: grandnode team
+DisplayOrder: 1
+FileName: Grand.Plugin.Payments.IDeal.dll

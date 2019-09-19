@@ -1,0 +1,38 @@
+﻿@model CustomerRoleModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<script type="text/javascript">
+    $(document).ready(function () {
+        toggleRemoveButton();
+    });
+    function toggleRemoveButton() {
+        if ($('#@Html.FieldIdFor(model => model.PurchasedWithProductId)').val() != '' ) {
+            $('#purchased-with-product-name-remove').show();
+        }
+        else {
+            $('#purchased-with-product-name-remove').hide();
+        }
+    }
+</script>
+<vc:admin-widget widget-zone="customer_role_details_top" additional-data="Model" />
+<admin-tabstrip name="customerrole-edit">
+    <items>
+        <tabstrip-item text="@T("Admin.Customers.CustomerRoles.Info")" tab-index="0">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <tabstrip-item text="@T("Admin.Customers.CustomerRoles.Products")" tab-index="1">
+            <content>
+                <div>
+                    <partial name="_CreateOrUpdate.TabProducts" model="Model" />
+                </div>
+            </content>
+        </tabstrip-item>
+        <vc:admin-widget widget-zone="customerrole_details_tabs" additional-data="Model" />
+    </items>
+</admin-tabstrip>
+<vc:admin-widget widget-zone="customer_role_details_bottom" additional-data="Model" />
