@@ -86,12 +86,19 @@ namespace Grand.Plugin.Payments.BrainTree
                 PrivateKey = privateKey
             };
 
+            var iDealGateway = new IdealPaymentGateway(gateway);
+
+            
             //new transaction request
             var transactionRequest = new TransactionRequest
             {
                 Amount = processPaymentRequest.OrderTotal,
+                 
             };
+          
 
+
+          
             //transaction credit card request
             var transactionCreditCardRequest = new TransactionCreditCardRequest
             {
@@ -100,6 +107,7 @@ namespace Grand.Plugin.Payments.BrainTree
                 ExpirationDate = processPaymentRequest.CreditCardExpireMonth + "/" + processPaymentRequest.CreditCardExpireYear
             };
             transactionRequest.CreditCard = transactionCreditCardRequest;
+           
 
             //address request
             var addressRequest = new AddressRequest

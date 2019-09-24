@@ -48,7 +48,7 @@ namespace Grand.Plugin.Payments.BrainTree.Controllers
         #endregion
 
         #region Methods
-
+      
         public async Task<IActionResult> Configure()
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))

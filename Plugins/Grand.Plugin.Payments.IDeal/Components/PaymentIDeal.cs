@@ -29,11 +29,8 @@ namespace Grand.Plugin.Payments.IDeal.Components
             return new List<Banks>() {
                 new Banks { Text = "ABN AMRO" , Value = "abn_amro" },
                 new Banks { Text = "ASN Bank" , Value = "asn_bank" },
-                new Banks { Text = "Bunq" , Value = "bunq" },
-                new Banks { Text = "Handelsbanken" , Value = "handelsbanken" },
                 new Banks { Text = "ING" , Value = "ing" },
                 new Banks { Text = "Knab" , Value = "knab" },
-                new Banks { Text = "Moneyou" , Value = "moneyou" },
                 new Banks { Text = "Rabobank" , Value = "rabobank" },
                 new Banks { Text = "RegioBank" , Value = "regiobank" },
                 new Banks { Text = "SNS Bank (De Volksbank)" , Value = "sns_bank" },

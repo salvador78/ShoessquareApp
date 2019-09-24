@@ -18,14 +18,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Braintree" Version="4.12.0" />
+    <PackageReference Include="Braintree" Version="4.15.0" />
     <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.3.0" />
   </ItemGroup>
   
   <Target Name="FilterCopyLocalItems" AfterTargets="ResolveLockFileCopyLocalProjectDeps">
     <ItemGroup>
-      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" 
-                               Condition="'%(Filename)' != 'Braintree' AND '%(Filename)' != 'System.Xml.XPath.XmlDocument'" />
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(Filename)' != 'Braintree' AND '%(Filename)' != 'System.Xml.XPath.XmlDocument'" />
     </ItemGroup>
   </Target>
   
@@ -51,6 +50,9 @@
   </ItemGroup>
   
   <ItemGroup>
+    <None Update="Content\Scripts\BrainTree.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Description.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

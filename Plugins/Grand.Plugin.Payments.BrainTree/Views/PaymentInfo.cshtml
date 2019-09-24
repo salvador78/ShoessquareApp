@@ -2,44 +2,148 @@
 @{
     Layout = "";
 }
+<!-- Load the client component. -->
+<script src="https://js.braintreegateway.com/web/3.52.1/js/client.min.js"></script>
+
+<!-- Load the local payment component. -->
+<script src="https://js.braintreegateway.com/web/3.52.1/js/local-payment.min.js"></script>
+<script type="text/javascript">
+
+
+    $.getScript("https://js.braintreegateway.com/web/3.52.1/js/client.min.js", function () {
+        var localPaymentInstance;
+        var idealButton = document.getElementById('ideal-button');
+        var sofortButton = document.getElementById('sofort-button');
+        
+        // Create a client.
+        braintree.client.create({
+            authorization: 'sandbox_8htmn8n8_64tmq295h579v9sp'
+        }, function (clientErr, clientInstance) {
+
+            // Stop if there was a problem creating the client.
+            // This could happen if there is a network error or if the authorization
+            // is invalid.
+            if (clientErr) {
+                console.error('Error creating client:', clientErr);
+                return;
+            }
+
+            // Create a local payment component.
+            braintree.localPayment.create({
+                client: clientInstance,
+                merchantAccountId: 'shoessquare'
+            }, function (localPaymentErr, paymentInstance) {
+
+                // Stop if there was a problem creating local payment component.
+                // This could happen if there was a network error or if it's incorrectly
+                // configured.
+                if (localPaymentErr) {
+                    console.error('Error creating local payment:', localPaymentErr);
+                    return;
+                }
+
+                localPaymentInstance = paymentInstance;
+            });
+
+            });
+
+        $.getScript("https://js.braintreegateway.com/web/3.52.1/js/client.min.js", function () {
+         function createLocalPaymentClickListener(type) {
+            return function (event) {
+                event.preventDefault();
+
+                localPaymentInstance.startPayment({
+                    paymentType: type,
+                    amount: '10.67',
+                    fallback: { // see Fallback section for details on these params
+                        url: 'https://your-domain.com/page-to-complete-checkout',
+                        buttonText: 'Complete Payment'
+                    },
+                    currencyCode: 'EUR',
+                    address: {
+                        countryCode: 'NL'
+                    },
+                    onPaymentStart: function (data, start) {
+                        // NOTE: It is critical here to store data.paymentId on your server
+                        //       so it can be mapped to a webhook sent by Braintree once the
+                        //       buyer completes their payment. See Start the payment
+                        //       section for details.
+
+                        // Call start to initiate the popup
+                        start();
+                    }
+                }, function (startPaymentError, payload) {
+                    if (startPaymentError) {
+                        if (startPaymentError.code === 'LOCAL_PAYMENT_POPUP_CLOSED') {
+                            console.error('Customer closed Local Payment popup.');
+                        } else {
+                            console.error('Error!', startPaymentError);
+                        }
+                    } else {
+                        // Send the nonce to your server to create a tstartPaymentransaction
+                        console.log(payload.nonce);
+                    }
+                });
+            };
+        }
+         
+
+        idealButton.addEventListener('click', createLocalPaymentClickListener('ideal'));
+        sofortButton.addEventListener('click', createLocalPaymentClickListener('sofort'));
+    });
+    });
+
+    
+   
+    
+
+</script>
 <div class="container">
-    <div class="row align-items-center mb-3">
-        <div class="col-md-4 col-12 text-md-right">
-            <label class="col-form-label" asp-for="CardholderName">@T("Payment.CardholderName"):</label>
-        </div>
-        <div class="col-md-4 col-12 text-right">
-            <input asp-for="CardholderName" class="form-control" autofocus="autofocus" />
-            <span asp-validation-for="CardholderName"></span>
-        </div>
-    </div>
+    <button id="ideal-button">
+        <img src="img/ideal.png" class="payment-button" />
+    </button>
+    <button id="sofort-button">
+        <img src="img/sofort.png" class="payment-button" />
+    </button>
 
-    <div class="row align-items-center mb-3">
-        <div class="col-md-4 col-12 text-md-right">
-            <label class="col-form-label" asp-for="CardNumber">@T("Payment.CardNumber"):</label>
+    @*<div class="row align-items-center mb-3">
+            <div class="col-md-4 col-12 text-md-right">
+                <label class="col-form-label" asp-for="CardholderName">@T("Payment.CardholderName"):</label>
+            </div>
+            <div class="col-md-4 col-12 text-right">
+                <input asp-for="CardholderName" class="form-control" autofocus="autofocus" />
+                <span asp-validation-for="CardholderName"></span>
+            </div>
         </div>
-        <div class="col-md-4 col-12 text-right">
-            <input asp-for="CardNumber" class="form-control" autofocus="autofocus" />
-            <span asp-validation-for="CardNumber"></span>
-        </div>
-    </div>
 
-    <div class="row align-items-center mb-3">
-        <div class="col-md-4 col-12 text-md-right">
-            <label class="col-form-label" asp-for="ExpireMonth">@T("Payment.ExpirationDate"):</label>
+        <div class="row align-items-center mb-3">
+            <div class="col-md-4 col-12 text-md-right">
+                <label class="col-form-label" asp-for="CardNumber">@T("Payment.CardNumber"):</label>
+            </div>
+            <div class="col-md-4 col-12 text-right">
+                <input asp-for="CardNumber" class="form-control" autofocus="autofocus" />
+                <span asp-validation-for="CardNumber"></span>
+            </div>
         </div>
-        <div class="col-md-4 col-12 text-right d-md-flex input-group">
-            <select asp-for="ExpireMonth" class="form-control col-md-4 col-12" asp-items="Model.ExpireMonths"></select>
-            <select asp-for="ExpireYear" class="form-control col-md-4 col-12" asp-items="Model.ExpireYears"></select>
-        </div>
-    </div>
 
-    <div class="row align-items-center mb-3">
-        <div class="col-md-4 col-12 text-md-right">
-            <label class="col-form-label" asp-for="CardCode">@T("Payment.CardCode"):</label>
+        <div class="row align-items-center mb-3">
+            <div class="col-md-4 col-12 text-md-right">
+                <label class="col-form-label" asp-for="ExpireMonth">@T("Payment.ExpirationDate"):</label>
+            </div>
+            <div class="col-md-4 col-12 text-right d-md-flex input-group">
+                <select asp-for="ExpireMonth" class="form-control col-md-4 col-12" asp-items="Model.ExpireMonths"></select>
+                <select asp-for="ExpireYear" class="form-control col-md-4 col-12" asp-items="Model.ExpireYears"></select>
+            </div>
         </div>
-        <div class="col-md-4 col-12 text-right">
-            <input asp-for="CardCode" class="form-control" autofocus="autofocus" />
-            <span asp-validation-for="CardCode"></span>
-        </div>
-    </div>
+
+        <div class="row align-items-center mb-3">
+            <div class="col-md-4 col-12 text-md-right">
+                <label class="col-form-label" asp-for="CardCode">@T("Payment.CardCode"):</label>
+            </div>
+            <div class="col-md-4 col-12 text-right">
+                <input asp-for="CardCode" class="form-control" autofocus="autofocus" />
+                <span asp-validation-for="CardCode"></span>
+            </div>
+        </div>*@
 </div>
+

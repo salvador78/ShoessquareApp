@@ -400,10 +400,11 @@ var PaymentMethod = {
 };
 
 
-
 var PaymentInfo = {
     form: false,
     saveUrl: false,
+
+   
 
     init: function (form, saveUrl) {
         this.form = form;
@@ -443,8 +444,6 @@ var PaymentInfo = {
         Checkout.setStepResponse(response);
     }
 };
-
-
 
 var ConfirmOrder = {
     form: false,
