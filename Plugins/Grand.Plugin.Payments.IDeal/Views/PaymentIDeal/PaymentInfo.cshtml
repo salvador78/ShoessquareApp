@@ -18,9 +18,9 @@
     -webkit-transition: all 100ms ease-in;
        -moz-transition: all 100ms ease-in;
             transition: all 100ms ease-in;
-    -webkit-filter: brightness(1.8) grayscale(1) opacity(.7);
-       -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
-            filter: brightness(1.8) grayscale(1) opacity(.7);
+    -webkit-filter: brightness(1.2) grayscale(1) opacity(.7);
+       -moz-filter: brightness(1.2) grayscale(1) opacity(.7);
+            filter: brightness(1.2) grayscale(1) opacity(.7);
     }
     .drinkcard-cc:hover{
         -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
@@ -32,18 +32,60 @@
     -webkit-filter: none;
        -moz-filter: none;
             filter: none;
-}
-
+            
+    }
+    .payment-method {
+        float:right;
+    }
+   .payment-method > img {
+        max-width: 38px;
+        max-height: 35px;
+    }
+   .custom-control{ margin: 5px 0;}
 </style>
 <div class="container">
-    <div class="cc-selector">
+    <div class="custom-control custom-radio">
+        <input type="radio" id="iDeal" name="paymentRadio" value="1" class="custom-control-input">
+        <label class="custom-control-label" for="iDeal">iDEAL</label>
+        <div class="payment-method">
+            <img class="img-fluid" src="Plugins/Payments.IDeal/Images/iDEAL.png" />
+        </div>
+    </div>
+    <div class="cc-selector" id="iDealContainer" style="display:none">
         @{
             foreach (var bank in Model.Banks)
             {
-                <input id="@bank.Value" type="radio" name="bank" value="bank_@bank.Value" />
+                <input id="@bank.Value" type="radio" name="bank" value="@bank.Value" />
                 <label class="drinkcard-cc @bank.Value" style="background-image: url(@string.Format("Plugins/Payments.IDeal/Images/{0}.png", bank.Value))" for="@bank.Value"></label>
             }
         }
-
+        <!-- Used to display form errors. -->
+        <div id="error-message" role="alert"></div>
+    </div>
+    <div class="custom-control custom-radio">
+        <input type="radio" id="creditcard" name="paymentRadio" value="2" class="custom-control-input">
+        <label class="custom-control-label" for="creditcard">credit card</label>
+        <div class="payment-method">
+            <img class="img-fluid" src="Plugins/Payments.IDeal/Images/MasterCard.png" width="40" />
+            <img class="img-fluid" src="Plugins/Payments.IDeal/Images/Visa.png" width="40" />
+        </div>
+    </div>
+    <div id="creditcardContainer" style="display:none">
+        <p>Credit card</p>
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('input[name="paymentRadio"]').click(function(){
+            var radioValue = $(this).val();
+            if (radioValue == "1") {
+                $("#iDealContainer").show();
+                $("#creditcardContainer").hide();
+            }
+            else {
+                $("#iDealContainer").hide();
+                $("#creditcardContainer").show();
+            }
+        });
+    });
+</script>

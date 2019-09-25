@@ -86,9 +86,7 @@ namespace Grand.Plugin.Payments.BrainTree
                 PrivateKey = privateKey
             };
 
-            var iDealGateway = new IdealPaymentGateway(gateway);
-
-            
+                       
             //new transaction request
             var transactionRequest = new TransactionRequest
             {

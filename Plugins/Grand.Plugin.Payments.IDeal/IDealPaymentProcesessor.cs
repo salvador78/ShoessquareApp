@@ -5,17 +5,17 @@ using Grand.Core.Plugins;
 using Grand.Plugin.Payments.IDeal.Controllers;
 using Grand.Plugin.Payments.IDeal.Models;
 using Grand.Services.Configuration;
+using Grand.Services.Customers;
 using Grand.Services.Localization;
-using Grand.Services.Orders;
 using Grand.Services.Payments;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Stripe;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
-using Stripe;
+using System.Xml.Serialization;
 
 namespace Grand.Plugin.Payments.IDeal
 {
@@ -30,15 +30,26 @@ namespace Grand.Plugin.Payments.IDeal
         private readonly IWebHelper _webHelper;
         private readonly IServiceProvider _serviceProvider;
         private readonly ISettingService _settingService;
+        private readonly IDealPaymentSettings _iDealPaymentSettings;
+        private readonly ICustomerService _customerService;
+        private readonly IPaymentService _paymentService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         #endregion
 
         #region Ctor
-        public IDealPaymentProcessor(ILocalizationService localizationService, IWebHelper webHelper, IServiceProvider serviceProvider, ISettingService settingService)
+        public IDealPaymentProcessor(ILocalizationService localizationService, IWebHelper webHelper, IServiceProvider serviceProvider,
+            ISettingService settingService, IDealPaymentSettings iDealPaymentSettings, ICustomerService customerService, IPaymentService paymentService,
+            IHttpContextAccessor httpContextAccessor)
         {
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._serviceProvider = serviceProvider;
-            this._settingService = settingService;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
+            _serviceProvider = serviceProvider;
+            _settingService = settingService;
+            _iDealPaymentSettings = iDealPaymentSettings;
+            _customerService = customerService;
+            _paymentService = paymentService;
+            _httpContextAccessor = httpContextAccessor;
+            
         }
 
         #endregion
@@ -80,8 +91,19 @@ namespace Grand.Plugin.Payments.IDeal
 
         public async Task<ProcessPaymentRequest> GetPaymentInfo(IFormCollection form)
         {
-           
-            return await Task.FromResult(new ProcessPaymentRequest());
+            var result = new ProcessPaymentRequest();
+
+            foreach (var key in form.Keys)
+            {
+                string value = form[key];
+                if (key == "bank")
+                {
+                    result.CustomValues.Add("iDEAL", value);
+                    break;
+                }
+            }
+
+            return await Task.FromResult(result);
         }
 
         public void GetPublicViewComponent(out string viewComponentName)
@@ -116,35 +138,76 @@ namespace Grand.Plugin.Payments.IDeal
 
         public async Task PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
         {
-            var secretKey = _settingService.GetSettingByKey("Plugins.Payment.IDeal.SecretKey", "SecretKey");
-            if (string.IsNullOrWhiteSpace(secretKey))
+            var secretKey = _iDealPaymentSettings.SecretKey;
+            var source = string.Empty;
+            var clientSecret = _httpContextAccessor.HttpContext.Request.Query["client_secret"].ToString();
+
+            if (string.IsNullOrWhiteSpace(clientSecret))
             {
-                StripeConfiguration.ApiKey = secretKey;
+                if (!string.IsNullOrWhiteSpace(secretKey))
+                {
+                    //get store location
+                    var storeLocation = _webHelper.GetStoreLocation();
 
-                var options = new ChargeCreateOptions() {
-                    Amount = 2000,
-                    Currency = "usd",
-                    Source = "tok_visa",
-
-                    Metadata = new Dictionary<String, String>()
+                    StripeConfiguration.ApiKey = secretKey;
+                    if (!string.IsNullOrWhiteSpace(postProcessPaymentRequest.Order.CustomValuesXml))
                     {
-                        { "OrderId", "6735"}
-                    }           
+                        var bank = StringToXMLObject<DictionarySerializer>(postProcessPaymentRequest.Order.CustomValuesXml);
+
+
+                        var options = new SourceCreateOptions() {
+                            Amount = (long)postProcessPaymentRequest.Order.OrderTotal,
+                            Currency = postProcessPaymentRequest.Order.CustomerCurrencyCode.ToLower(),
+                            Type = SourceType.Ideal,
+                            Redirect = new SourceRedirectOptions {
+                                ReturnUrl = $"{storeLocation}checkout/OpcCompleteRedirectionPayment",
+                            },
+                            Ideal = new SourceIdealCreateOptions {
+                                Bank = bank.Item.Value
+                            }
+                        };
+                        var service = new SourceService();
+                        Source charge = await service.CreateAsync(options);
+
+                        if (charge.StripeResponse.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            JObject jObject = JObject.Parse(charge.StripeResponse.Content);
+                            string value = (string)jObject.SelectToken("redirect.url");
+                            source = (string)jObject.SelectToken("id");
+                            _httpContextAccessor.HttpContext.Session.SetString("source", source);
+                            _httpContextAccessor.HttpContext.Response.Redirect(value);
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    await Task.FromException(new Exception("secret key canot be null or empty"));
+                }
+            }
+            else
+            {
+               source = _httpContextAccessor.HttpContext.Session.GetString("source");
+               var options = new ChargeCreateOptions {
+                   Amount = (long)postProcessPaymentRequest.Order.OrderTotal,
+                   Currency = postProcessPaymentRequest.Order.CustomerCurrencyCode.ToLower(),
+                   Source = source,
                 };
 
                 var service = new ChargeService();
                 Charge charge = await service.CreateAsync(options);
+                if(charge.StripeResponse.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    postProcessPaymentRequest.Order.PaymentStatus = PaymentStatus.Paid;
+                }
+                _httpContextAccessor.HttpContext.Session.SetString("source", null);
             }
-
-
         }
 
 
         public async Task<ProcessPaymentResult> ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
             var result = new ProcessPaymentResult();
-            result.NewPaymentStatus = PaymentStatus.Pending;
-
             return await Task.FromResult(result);
         }
 
@@ -196,8 +259,6 @@ namespace Grand.Plugin.Payments.IDeal
         public async Task<IList<string>> ValidatePaymentForm(IFormCollection form)
         {
             var warnings = new List<string>();
-            var bank = form["Banks"];
-
             //validate
 
             return await Task.FromResult(warnings);
@@ -216,6 +277,24 @@ namespace Grand.Plugin.Payments.IDeal
             return $"{_webHelper.GetStoreLocation()}Admin/PaymentIDeal/Configure";
         }
 
+        #endregion
+
+        #region Helpers
+        public static T StringToXMLObject<T>(string str)
+        {
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(T));
+                T res = (T)serializer.Deserialize(new StringReader(str));
+                return res;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+        
         #endregion
     }
 }
