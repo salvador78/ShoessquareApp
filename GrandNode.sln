@@ -67,7 +67,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.ExternalAuth.G
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Payments.BrainTree", "Plugins\Grand.Plugin.Payments.BrainTree\Grand.Plugin.Payments.BrainTree.csproj", "{EC08558B-8993-49DC-8DB7-F96369740732}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Payments.IDeal", "Plugins\Grand.Plugin.Payments.IDeal\Grand.Plugin.Payments.IDeal.csproj", "{0EFACE0D-3389-4ADD-B4AA-4009E72DA5A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Payments.Stripe", "Plugins\Grand.Plugin.Payments.Stripe\Grand.Plugin.Payments.Stripe.csproj", "{0EFACE0D-3389-4ADD-B4AA-4009E72DA5A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
