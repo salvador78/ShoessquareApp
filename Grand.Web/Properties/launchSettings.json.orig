@@ -1,0 +1,31 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+<<<<<<< HEAD
+    "anonymousAuthentication": true,
+=======
+    "anonymousAuthentication": false,
+>>>>>>> Add project files.
+    "iisExpress": {
+      "applicationUrl": "http://localhost:16592/",
+      "sslPort": 44342
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "Grand.Web": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:16593"
+    }
+  }
+}
