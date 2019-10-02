@@ -398,6 +398,7 @@ namespace Grand.Plugin.Payments.PayPalStandard
         public async Task<ProcessPaymentResult> ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
             var result = new ProcessPaymentResult();
+            result.NewPaymentStatus = Core.Domain.Payments.PaymentStatus.Pending;
             return await Task.FromResult(result);
         }
 

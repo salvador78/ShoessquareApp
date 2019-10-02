@@ -1558,6 +1558,7 @@ namespace Grand.Web.Controllers
         {
             try
             {
+              
                 //validation
                 var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
                 OpcCartValidate(cart);
@@ -1584,6 +1585,7 @@ namespace Grand.Web.Controllers
                 processPaymentRequest.PaymentMethodSystemName = await _workContext.CurrentCustomer.GetAttribute<string>(
                     _genericAttributeService, SystemCustomerAttributeNames.SelectedPaymentMethod,
                     _storeContext.CurrentStore.Id);
+
                 var placeOrderResult = await orderProcessingService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
@@ -1608,7 +1610,7 @@ namespace Grand.Web.Controllers
                         //redirect
                         return Json(new
                         {
-                            redirect = string.Format("{0}checkout/OpcCompleteRedirectionPayment", _webHelper.GetStoreLocation())
+                             redirect = string.Format("{0}checkout/OpcCompleteRedirectionPayment", _webHelper.GetStoreLocation())
                         });
                     }
 
@@ -1616,6 +1618,8 @@ namespace Grand.Web.Controllers
                     //success
                     return Json(new { success = 1 });
                 }
+
+                await _customerService.ClearShoppingCartItem(processPaymentRequest.CustomerId, _workContext.CurrentCustomer.ShoppingCartItems.ToList());
 
                 //error
                 var confirmOrderModel = new CheckoutConfirmModel();
@@ -1684,6 +1688,7 @@ namespace Grand.Web.Controllers
                     return Content("Redirected");
                 }
 
+                await _customerService.ClearShoppingCartItem(order.CustomerId, _workContext.CurrentCustomer.ShoppingCartItems.ToList());
                 //if no redirection has been done (to a third-party payment page)
                 //theoretically it's not possible
                 return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
@@ -1691,7 +1696,19 @@ namespace Grand.Web.Controllers
             catch (Exception exc)
             {
                 _logger.Warning(exc.Message, exc, _workContext.CurrentCustomer);
-                return Content(exc.Message);
+
+                var confirmOrderModel = new CheckoutConfirmModel() {
+                    Warnings = new List<string> { exc.Message }
+                };
+
+                return Json(new
+                {
+                    update_section = new UpdateSectionJsonModel {
+                        name = "confirm-order",
+                        html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                    },
+                    goto_section = "confirm_order"
+                });
             }
         }
 

@@ -653,6 +653,11 @@ namespace Grand.Web.Controllers
 
         }
 
+        public virtual IActionResult ErrorPage(string msg)
+        {
+            ViewBag.Message = msg;
+            return View();
+        }
         #endregion
     }
 }

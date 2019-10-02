@@ -15,7 +15,7 @@
         <conditions>
           <add input="{StaticRedirects:{REQUEST_URI}}" pattern="(.+)" />
         </conditions>
-        <action type="Redirect" url="http://localhost:16592{C:1}" redirectType="Found" />
+        <action type="Redirect" url="https://277c33ba.ngrok.io{C:1}" redirectType="Found" />
       </rule>
     </rules>
 </rewrite>

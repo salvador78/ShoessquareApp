@@ -35,9 +35,10 @@
     }
     if (Model.DisablePaymentMethodCheckoutStep)
     {
-         paymentInfoStepNumber = paymentInfoStepNumber - 1;
-         confirmOrderStepNumber = confirmOrderStepNumber - 1;
+        paymentInfoStepNumber = paymentInfoStepNumber - 1;
+        confirmOrderStepNumber = confirmOrderStepNumber - 1;
     }
+    //storeLocation = "https://277c33ba.ngrok.io/";
 }
 <script asp-location="Footer">
     $(".opc li.active").prev("li").removeClass("dontGo");
@@ -195,10 +196,12 @@
                     </blockquote>
                 </div>
             </div>
+            <div>@ViewBag.Alert</div>
             <div id="checkout-step-confirm-order" class="step mt-2 mb-2 a-item" style="display: none;">
                 <div id="checkout-confirm-order-load">
                     @*confirm order content will be loaded here*@
                 </div>
+
                 <script asp-location="Footer">
                         ConfirmOrder.init('@(storeLocation)checkout/OpcConfirmOrder/', '@(storeLocation)checkout/completed/');
                 </script>

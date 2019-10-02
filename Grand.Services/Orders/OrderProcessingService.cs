@@ -981,7 +981,7 @@ namespace Grand.Services.Orders
             }
 
             //clear shopping cart
-            await _customerService.ClearShoppingCartItem(order.CustomerId, details.Cart);
+            //await _customerService.ClearShoppingCartItem(order.CustomerId, details.Cart);
 
             //product also purchased
             await _orderService.InsertProductAlsoPurchased(order);

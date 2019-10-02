@@ -64,9 +64,17 @@ namespace Grand.Plugin.Payments.Stripe
             throw new NotImplementedException();
         }
 
-        public Task<bool> CanRePostProcessPayment(Core.Domain.Orders.Order order)
+        public async Task<bool> CanRePostProcessPayment(Core.Domain.Orders.Order order)
         {
-            throw new NotImplementedException();
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            //let's ensure that at least 5 seconds passed after order is placed
+            //P.S. there's no any particular reason for that. we just do it
+            if ((DateTime.UtcNow - order.CreatedOnUtc).TotalSeconds < 5)
+                return false;
+
+            return await Task.FromResult(true);
         }
 
         public Task<CapturePaymentResult> Capture(CapturePaymentRequest capturePaymentRequest)
@@ -76,7 +84,7 @@ namespace Grand.Plugin.Payments.Stripe
 
         public async Task<decimal> GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            var result = await Task.FromResult<decimal>(2);
+            var result = await Task.FromResult<decimal>(0);
             return result;
         }
 
@@ -162,6 +170,7 @@ namespace Grand.Plugin.Payments.Stripe
         public async Task<ProcessPaymentResult> ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
             var result = new ProcessPaymentResult();
+            result.NewPaymentStatus = PaymentStatus.Pending;
             return await Task.FromResult(result);
         }
 
@@ -278,8 +287,7 @@ namespace Grand.Plugin.Payments.Stripe
         private async Task PostIDealProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest, string bank)
         {
             var secretKey = _stripePaymentSettings.SecretKey;
-            var json = new StreamReader(_httpContextAccessor.HttpContext.Request.Body).ReadToEnd();
-
+          
             var clientSecret = _httpContextAccessor.HttpContext.Request.Query["client_secret"].ToString();
             string source;
 
