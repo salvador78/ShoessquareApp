@@ -6,7 +6,7 @@
 <link rel="stylesheet" type="text/css" href="Plugins/Payments.Stripe/Content/Css/Stripe.css">
 <div class="container">
     <div class="custom-control custom-radio">
-        <input type="radio" id="iDeal" name="paymentRadio" value="1" class="custom-control-input">
+        <input type="radio" id="iDeal" name="paymentRadio" value="1" class="custom-control-input" checked="checked">
         <label class="custom-control-label" for="iDeal">iDEAL</label>
         <div class="payment-method">
             <img class="img-fluid" src="Plugins/Payments.Stripe/Content/Images/iDEAL.svg" />
@@ -36,27 +36,25 @@
     <div id="creditcardContainer" style="display:none">
         <div class="row">
             <div class="col-12 col-md-6">
-                <div class="form-container">
-                    <div class="field-container">
-                        <label for="name">Name</label>
-                        <input id="name" asp-for="CardholderName" maxlength="20" type="text">
-                    </div>
-                    <div class="field-container">
-                        <label for="cardnumber">Card Number</label>
-                        <input id="cardnumber" asp-for="CardNumber" type="text" pattern="[0-9]*" inputmode="numeric">
-                        <svg id="ccicon" class="ccicon" width="750" height="471" viewBox="0 0 750 471" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                             xmlns:xlink="http://www.w3.org/1999/xlink">
+                <div class="field-container">
+                    <label class="col-form-label" for="name">Name</label>
+                    <input class="form-control" id="name" asp-for="CardholderName" maxlength="20" type="text">
+                </div>
+                <div class="field-container">
+                    <label class="col-form-label" for="cardnumber">Card Number</label>
+                    <input class="form-control" id="cardnumber" asp-for="CardNumber" type="text" pattern="[0-9]*" inputmode="numeric">
+                    <svg id="ccicon" class="ccicon" width="750" height="471" viewBox="0 0 750 471" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink">
 
-                        </svg>
-                    </div>
-                    <div class="field-container">
-                        <label for="expirationdate">Expiration (mm/yy)</label>
-                        <input id="expirationdate" asp-for="ExpireDate" type="text" pattern="[0-9]*" inputmode="numeric">
-                    </div>
-                    <div class="field-container">
-                        <label for="securitycode">Security Code</label>
-                        <input id="securitycode" asp-for="CardCode" type="text" pattern="[0-9]*" inputmode="numeric">
-                    </div>
+                    </svg>
+                </div>
+                <div class="field-container">
+                    <label class="col-form-label"  for="expirationdate">Expiration (mm/yy)</label>
+                    <input class="form-control" id="expirationdate" asp-for="ExpireDate" type="text" pattern="[0-9]*" inputmode="numeric">
+                </div>
+                <div class="field-container">
+                    <label class="col-form-label" for="securitycode">Security Code</label>
+                    <input class="form-control" id="securitycode" asp-for="CardCode" type="text" pattern="[0-9]*" inputmode="numeric">
                 </div>
             </div>
             <div class="col-12 col-md-6">
@@ -261,21 +259,29 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
+
+        var radioValue = $('input[name="paymentRadio"]').val();
+        paymentMethodSelector(radioValue);
+
         $('input[name="paymentRadio"]').click(function () {
-            var radioValue = $(this).val();
-            if (radioValue == "1") {
-                $("#iDealContainer").show();
-                $("#creditcardContainer").hide();
-            }
-            else {
-                $("input:radio[name='bank']").each(function(i) {
-                       this.checked = false;
-                });
-                $("#iDealContainer").hide();
-                $("#creditcardContainer").show();
-            }
+            paymentMethodSelector($(this).val());
         });
     });
+    function paymentMethodSelector(radioValue) {
+
+        if (radioValue == "1") {
+            $("#iDealContainer").show();
+            $("#creditcardContainer").hide();
+        }
+        else {
+            $("input:radio[name='bank']").each(function (i) {
+                this.checked = false;
+            });
+            $("#iDealContainer").hide();
+            $("#creditcardContainer").show();
+        }
+    };
+
     loadScript("https://cdnjs.cloudflare.com/ajax/libs/imask/3.4.0/imask.min.js", function () {
         loadScript("Plugins/Payments.Stripe/Content/Scripts/card.js", function () { });
     });

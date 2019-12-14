@@ -46,12 +46,12 @@
                             <span class="custom-control-label"></span>
                             <span  for="shippingoption_@(i)" class="custom-control-description">
                                 @T("Checkout.SelectShippingMethod.MethodAndFee", shippingMethod.Name, shippingMethod.Fee)
-                            
+                            </span><br />
+                            <span style="font-size: 0.8rem;">
                                 @if (!String.IsNullOrEmpty(shippingMethod.Description))
                                 {
-                                        @Html.Raw(shippingMethod.Description)
+                                    @Html.Raw(shippingMethod.Description)
                                 }
-                            
                             </span>
                         </label>
                     </li>

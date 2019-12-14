@@ -2957,8 +2957,8 @@ table th.latest-post {
 	margin-bottom: 0;
 }
 .opc .card-grey {
-	background-color: rgba(204, 204, 204, 0.17);
-	color: rgba(129, 138, 145, 0.36);
+    background-color: rgba(204, 204, 204, 0.17);
+    color: rgba(129, 138, 145, 0.36);
     border: 1px solid #dfdfdf;
 }
 .payment-method ul,
