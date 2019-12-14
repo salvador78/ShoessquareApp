@@ -273,6 +273,7 @@ namespace Grand.Services.Orders
             details.TaxRates = details.InitialOrder.TaxRates;
             details.IsRecurringShoppingCart = true;
             processPaymentRequest.OrderTotal = details.OrderTotal;
+            processPaymentRequest.CustomerCurrencyCode = details.CustomerCurrencyCode;
 
             return details;
         }
@@ -701,6 +702,7 @@ namespace Grand.Services.Orders
             }
 
             processPaymentRequest.OrderTotal = details.OrderTotal;
+            processPaymentRequest.CustomerCurrencyCode = details.CustomerCurrencyCode;
 
             return details;
         }

@@ -23,6 +23,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
+using Grand.Framework.Security;
 
 namespace Grand.Web.Controllers
 {
@@ -158,9 +160,9 @@ namespace Grand.Web.Controllers
             return RedirectToRoute("CheckoutBillingAddress");
         }
 
-        public virtual async Task<IActionResult> Completed(string orderId)
+        public virtual async Task<IActionResult> Completed(string orderId, string warning)
         {
-            //validation
+
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
                 return Challenge();
 
@@ -187,11 +189,11 @@ namespace Grand.Web.Controllers
             }
 
             //model
-            var model = new CheckoutCompletedModel
-            {
+            var model = new CheckoutCompletedModel {
                 OrderId = order.Id,
                 OrderNumber = order.OrderNumber,
-                OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled
+                OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled,
+                warning = warning
             };
 
             return View(model);
@@ -428,8 +430,7 @@ namespace Grand.Web.Controllers
                         return RedirectToRoute("CheckoutShippingAddress");
 
                     //save "pick up in store" shipping method
-                    var pickUpInStoreShippingOption = new ShippingOption
-                    {
+                    var pickUpInStoreShippingOption = new ShippingOption {
                         Name = string.Format(_localizationService.GetResource("Checkout.PickupPoints.Name"), selectedPoint.Name),
                         Rate = selectedPoint.PickupFee,
                         Description = selectedPoint.Description,
@@ -867,8 +868,7 @@ namespace Grand.Web.Controllers
                 if (placeOrderResult.Success)
                 {
                     this.HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", null);
-                    var postProcessPaymentRequest = new PostProcessPaymentRequest
-                    {
+                    var postProcessPaymentRequest = new PostProcessPaymentRequest {
                         Order = placeOrderResult.PlacedOrder
                     };
                     await _paymentService.PostProcessPayment(postProcessPaymentRequest);
@@ -945,8 +945,7 @@ namespace Grand.Web.Controllers
 
             return Json(new
             {
-                update_section = new UpdateSectionJsonModel
-                {
+                update_section = new UpdateSectionJsonModel {
                     name = "shipping-method",
                     html = this.RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
                 },
@@ -997,8 +996,7 @@ namespace Grand.Web.Controllers
                 //customer have to choose a payment method
                 return Json(new
                 {
-                    update_section = new UpdateSectionJsonModel
-                    {
+                    update_section = new UpdateSectionJsonModel {
                         name = "payment-method",
                         html = this.RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
                     },
@@ -1013,8 +1011,7 @@ namespace Grand.Web.Controllers
             var confirmOrderModel = await _checkoutViewModelService.PrepareConfirmOrder(cart);
             return Json(new
             {
-                update_section = new UpdateSectionJsonModel
-                {
+                update_section = new UpdateSectionJsonModel {
                     name = "confirm-order",
                     html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                 },
@@ -1037,8 +1034,7 @@ namespace Grand.Web.Controllers
                 var confirmOrderModel = await _checkoutViewModelService.PrepareConfirmOrder(cart);
                 return Json(new
                 {
-                    update_section = new UpdateSectionJsonModel
-                    {
+                    update_section = new UpdateSectionJsonModel {
                         name = "confirm-order",
                         html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                     },
@@ -1051,8 +1047,7 @@ namespace Grand.Web.Controllers
             var paymenInfoModel = _checkoutViewModelService.PreparePaymentInfo(paymentMethod);
             return Json(new
             {
-                update_section = new UpdateSectionJsonModel
-                {
+                update_section = new UpdateSectionJsonModel {
                     name = "payment-info",
                     html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
                 },
@@ -1084,8 +1079,7 @@ namespace Grand.Web.Controllers
             }
 
             var paymentMethodModel = await _checkoutViewModelService.PreparePaymentMethod(cart, filterByCountryId);
-            var model = new OnePageCheckoutModel
-            {
+            var model = new OnePageCheckoutModel {
                 DisablePaymentMethodCheckoutStep = paymentMethodModel.PaymentMethods.Count() == 1,
                 ShippingRequired = cart.RequiresShipping(),
                 DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep,
@@ -1140,8 +1134,7 @@ namespace Grand.Web.Controllers
                         billingAddressModel.NewAddressPreselected = true;
                         return Json(new
                         {
-                            update_section = new UpdateSectionJsonModel
-                            {
+                            update_section = new UpdateSectionJsonModel {
                                 name = "billing",
                                 html = this.RenderPartialViewToString("OpcBillingAddress", billingAddressModel)
                             },
@@ -1196,8 +1189,7 @@ namespace Grand.Web.Controllers
 
                         return Json(new
                         {
-                            update_section = new UpdateSectionJsonModel
-                            {
+                            update_section = new UpdateSectionJsonModel {
                                 name = "shipping",
                                 html = this.RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
                             },
@@ -1255,8 +1247,7 @@ namespace Grand.Web.Controllers
                             throw new Exception("Pickup point is not allowed");
 
                         //save "pick up in store" shipping method
-                        var pickUpInStoreShippingOption = new ShippingOption
-                        {
+                        var pickUpInStoreShippingOption = new ShippingOption {
                             Name = string.Format(_localizationService.GetResource("Checkout.PickupPoints.Name"), selectedPoint.Name),
                             Rate = selectedPoint.PickupFee,
                             Description = selectedPoint.Description,
@@ -1322,8 +1313,7 @@ namespace Grand.Web.Controllers
                         shippingAddressModel.NewAddressPreselected = true;
                         return Json(new
                         {
-                            update_section = new UpdateSectionJsonModel
-                            {
+                            update_section = new UpdateSectionJsonModel {
                                 name = "shipping",
                                 html = this.RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
                             }
@@ -1471,8 +1461,7 @@ namespace Grand.Web.Controllers
                     var confirmOrderModel = await _checkoutViewModelService.PrepareConfirmOrder(cart);
                     return Json(new
                     {
-                        update_section = new UpdateSectionJsonModel
-                        {
+                        update_section = new UpdateSectionJsonModel {
                             name = "confirm-order",
                             html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                         },
@@ -1527,8 +1516,7 @@ namespace Grand.Web.Controllers
                     var confirmOrderModel = await _checkoutViewModelService.PrepareConfirmOrder(cart);
                     return Json(new
                     {
-                        update_section = new UpdateSectionJsonModel
-                        {
+                        update_section = new UpdateSectionJsonModel {
                             name = "confirm-order",
                             html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                         },
@@ -1540,8 +1528,7 @@ namespace Grand.Web.Controllers
                 var paymenInfoModel = _checkoutViewModelService.PreparePaymentInfo(paymentMethod);
                 return Json(new
                 {
-                    update_section = new UpdateSectionJsonModel
-                    {
+                    update_section = new UpdateSectionJsonModel {
                         name = "payment-info",
                         html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
                     }
@@ -1558,7 +1545,7 @@ namespace Grand.Web.Controllers
         {
             try
             {
-              
+
                 //validation
                 var cart = _shoppingCartService.GetShoppingCart(_storeContext.CurrentStore.Id, ShoppingCartType.ShoppingCart, ShoppingCartType.Auctions);
                 OpcCartValidate(cart);
@@ -1590,8 +1577,7 @@ namespace Grand.Web.Controllers
                 if (placeOrderResult.Success)
                 {
                     this.HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", null);
-                    var postProcessPaymentRequest = new PostProcessPaymentRequest
-                    {
+                    var postProcessPaymentRequest = new PostProcessPaymentRequest {
                         Order = placeOrderResult.PlacedOrder
                     };
 
@@ -1610,7 +1596,7 @@ namespace Grand.Web.Controllers
                         //redirect
                         return Json(new
                         {
-                             redirect = string.Format("{0}checkout/OpcCompleteRedirectionPayment", _webHelper.GetStoreLocation())
+                            redirect = string.Format("{0}checkout/OpcCompleteRedirectionPayment", _webHelper.GetStoreLocation())
                         });
                     }
 
@@ -1628,8 +1614,7 @@ namespace Grand.Web.Controllers
 
                 return Json(new
                 {
-                    update_section = new UpdateSectionJsonModel
-                    {
+                    update_section = new UpdateSectionJsonModel {
                         name = "confirm-order",
                         html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                     },
@@ -1643,7 +1628,7 @@ namespace Grand.Web.Controllers
             }
         }
 
-        public virtual async Task<IActionResult> OpcCompleteRedirectionPayment()
+        public virtual async Task<IActionResult> OpcCompleteRedirectionPayment([FromServices] IOrderProcessingService orderProcessingService)
         {
             try
             {
@@ -1675,8 +1660,7 @@ namespace Grand.Web.Controllers
 
                 //Redirection will not work on one page checkout page because it's AJAX request.
                 //That's why we process it here
-                var postProcessPaymentRequest = new PostProcessPaymentRequest
-                {
+                var postProcessPaymentRequest = new PostProcessPaymentRequest {
                     Order = order
                 };
 
@@ -1687,31 +1671,51 @@ namespace Grand.Web.Controllers
                     //redirection or POST has been done in PostProcessPayment
                     return Content("Redirected");
                 }
-
+                await orderProcessingService.CheckOrderStatus(postProcessPaymentRequest.Order);
                 await _customerService.ClearShoppingCartItem(order.CustomerId, _workContext.CurrentCustomer.ShoppingCartItems.ToList());
                 //if no redirection has been done (to a third-party payment page)
                 //theoretically it's not possible
                 return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
             }
-            catch (Exception exc)
+            catch (Exception ex)
             {
-                _logger.Warning(exc.Message, exc, _workContext.CurrentCustomer);
+                _logger.Warning(ex.Message, ex, _workContext.CurrentCustomer);
 
-                var confirmOrderModel = new CheckoutConfirmModel() {
-                    Warnings = new List<string> { exc.Message }
-                };
-
-                return Json(new
+                return RedirectToRoute(new
                 {
-                    update_section = new UpdateSectionJsonModel {
-                        name = "confirm-order",
-                        html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
-                    },
-                    goto_section = "confirm_order"
+                    controller = "checkout",
+                    action = "completed",
+                    orderId = string.Empty,
+                    warning = "Helaas is uw betaling mislukt, opnieuw proberen? "
                 });
+
             }
         }
+        [PublicAntiForgery]
+        public virtual async Task<IActionResult> RePostPayment(string orderId, [FromServices] IWebHelper webHelper)
+        {
+            var order = await _orderService.GetOrderById(orderId);
+            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+                return Challenge();
 
+            if (!await _paymentService.CanRePostProcessPayment(order))
+                return RedirectToRoute("CheckoutCompleted", new { orderId = orderId });
+
+            var postProcessPaymentRequest = new PostProcessPaymentRequest {
+                Order = order
+            };
+            await _paymentService.PostProcessPayment(postProcessPaymentRequest);
+
+            if (webHelper.IsRequestBeingRedirected || webHelper.IsPostBeingDone)
+            {
+                //redirection or POST has been done in PostProcessPayment
+                return Content("Redirected");
+            }
+
+            //if no redirection has been done (to a third-party payment page)
+            //theoretically it's not possible
+            return RedirectToRoute("CheckoutCompleted", new { orderId = orderId });
+        }
         #endregion
     }
 }

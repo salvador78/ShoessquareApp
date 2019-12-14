@@ -11,19 +11,36 @@
         @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Complete })
     }
     <h2 class="generalTitle text-center">@T("Checkout.ThankYou")</h2>
+
     <div class="checkout-data">
+
         @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_completed_top", additionalData = Model.OrderId })
         <div class="card order-completed text-center">
-            <div class="alert-success alert text-success text-center mx-3 mb-0"><strong>@T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</strong></div>
+            @if (!string.IsNullOrWhiteSpace(Model.warning))
+            {
+            <div class="alert-error alert text-danger text-center mx-3 mb-0">
+                <p class="hint">
+                    <em>@T("Order.RetryPayment.Hint")</em>
+                </p>
+                <input type="button" value="@T("Order.RetryPayment")" class="btn btn-info re-order-button" onclick="setLocation('@Url.RouteUrl("CheckoutRePostPayment", new { orderId = Model.OrderId })    ')" />
+            </div>
+            }
+            else
+            {
+                <div class="alert-success alert text-success text-center mx-3 mb-0"><strong>@T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</strong></div>
+            }
             <div class="card-body pt-0 text-center">
                 <div class="order-number generalMarginSupporter text-center">
                     <strong>@T("Checkout.OrderNumber"): @Model.OrderNumber</strong>
                 </div>
                 <div class="buttons text-center">
                     <a class="btn btn-secondary mb-1" href="@Url.RouteUrl("OrderDetails", new { orderID = Model.OrderId })">@T("Checkout.PlacedOrderDetails")</a>
-                    <button type="button" class="btn btn-info order-completed-continue-button mb-1" onclick="setLocation('@Url.RouteUrl("HomePage")')" >
-                        @T("Checkout.ThankYou.Continue")
-                    </button>
+                    @if (string.IsNullOrWhiteSpace(Model.warning))
+                    {
+                        <button type="button" class="btn btn-info order-completed-continue-button mb-1" onclick="setLocation('@Url.RouteUrl("HomePage")')">
+                            @T("Checkout.ThankYou.Continue")
+                        </button>
+                    }
                 </div>
             </div>
         </div>

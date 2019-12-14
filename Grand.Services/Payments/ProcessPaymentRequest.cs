@@ -36,6 +36,11 @@ namespace Grand.Services.Payments
         public decimal OrderTotal { get; set; }
 
         /// <summary>
+        /// Gets or sets a customer currency code
+        /// </summary>
+        public string CustomerCurrencyCode { get; set; }
+
+        /// <summary>
         /// /// <summary>
         /// Gets or sets a payment method identifier
         /// </summary>

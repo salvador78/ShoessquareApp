@@ -322,7 +322,6 @@ namespace Grand.Plugin.Payments.Stripe
                             source = (string)jObject.SelectToken("id");
                             _httpContextAccessor.HttpContext.Session.SetString("source", source);
                             _httpContextAccessor.HttpContext.Response.Redirect(value);
-                            return;
                         }
                     }
                 }
@@ -345,8 +344,9 @@ namespace Grand.Plugin.Payments.Stripe
                 if (charge.StripeResponse.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     postProcessPaymentRequest.Order.PaymentStatus = PaymentStatus.Paid;
+                    _httpContextAccessor.HttpContext.Session.Remove("source");
                 }
-                _httpContextAccessor.HttpContext.Session.SetString("source", null);
+               
             }
         }
         private async Task PostCreditCardProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)

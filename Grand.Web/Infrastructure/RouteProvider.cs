@@ -297,8 +297,11 @@ namespace Grand.Web.Infrastructure
                             "checkout/confirm",
                             new { controller = "Checkout", action = "Confirm" });
             routeBuilder.MapLocalizedRoute("CheckoutCompleted",
-                            "checkout/completed/{orderId}",
+                            "checkout/completed/{orderId}/{warning?}",
                             new { controller = "Checkout", action = "Completed" });
+            routeBuilder.MapLocalizedRoute("CheckoutRePostPayment",
+                            "checkout/repost-payment/{orderId}",
+                            new { controller = "Checkout", action = "RePostPayment" });
 
             //subscribe newsletters
             routeBuilder.MapLocalizedRoute("SubscribeNewsletter",

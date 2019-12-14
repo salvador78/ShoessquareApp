@@ -7,5 +7,6 @@ namespace Grand.Web.Models.Checkout
         public string OrderId { get; set; }
         public int OrderNumber { get; set; }
         public bool OnePageCheckoutEnabled { get; set; }
+        public string warning { get; set; }
     }
 }
