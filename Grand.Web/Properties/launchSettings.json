@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:16592",
+      "applicationUrl": "http://localhost:16594",
       "sslPort": 44342
     }
   },
@@ -16,7 +16,7 @@
       }
     },
     "Grand.Web": {
-      "commandName": "Project",
+      "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

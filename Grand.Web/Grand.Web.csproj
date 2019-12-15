@@ -10,6 +10,7 @@
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
     <TieredCompilation>true</TieredCompilation>
     <RazorCompileOnBuild>false</RazorCompileOnBuild>
+    <UserSecretsId>186ccf74-1384-4249-a711-eb324b69d5f3</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />

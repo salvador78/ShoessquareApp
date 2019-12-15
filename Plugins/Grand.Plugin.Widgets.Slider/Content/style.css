@@ -2,6 +2,7 @@
 
 #GrandCarousel {
     width: calc(100vw - 10px);
+
 }
 
     #GrandCarousel .carousel-item.img-desc,
@@ -30,16 +31,10 @@
         height: 100%;
     }
 
-    #GrandCarousel .carousel-item:not(.img-desc) img {
-        width: auto;
-        height: auto;
-        margin: auto;
-    }
-
-    #GrandCarousel .carousel-item.img-desc img {
-        width: 100%;
-        height: auto;
-        margin: auto;
+    #GrandCarousel .full-screen {
+        background-size: cover;
+        background-position: center bottom;
+        background-repeat: no-repeat;
     }
 
     #GrandCarousel .carousel-item .slide-title h2 {
