@@ -132,6 +132,7 @@
 }
 
 @media (max-width: 991px) {
+
     #GrandCarousel .carousel-item .slideRow {
         margin: 0;
     }
@@ -160,6 +161,6 @@
 
 @media (max-width: 767px) {
     #GrandCarousel {
-        display: none;
+       
     }
 }
