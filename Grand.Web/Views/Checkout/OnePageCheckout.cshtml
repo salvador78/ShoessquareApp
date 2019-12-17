@@ -45,7 +45,7 @@
     $(".opc li.active").nextAll("li").addClass("dontGo");
 </script>
 <div class="page checkout-page">
-    <h1 class="generalTitle h2">@T("Checkout")</h1>
+    <h1 class="generalTitle h2 mt-3">@T("Checkout")</h1>
     @await Component.InvokeAsync("Widget", new { widgetZone = "opc_content_before" })
 <ol class="opc pl-0" id="checkout-steps">
     <li id="opc-billing" class="tab-section allow">

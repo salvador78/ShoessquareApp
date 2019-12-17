@@ -242,7 +242,14 @@ namespace Grand.Plugin.Payments.Stripe
                         warnings.Add(error.ErrorMessage);
                     }
                 }
-
+            }
+            else if(creditCard == "1")
+            {
+                var bank = form["bank"];
+                if (string.IsNullOrWhiteSpace(bank))
+                {
+                    warnings.Add("Selecteer de juiste bank om de bestelling af te ronden.");
+                }
             }
             return await Task.FromResult(warnings);
         }

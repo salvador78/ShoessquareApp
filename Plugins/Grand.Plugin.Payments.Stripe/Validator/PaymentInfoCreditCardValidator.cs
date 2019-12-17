@@ -15,6 +15,6 @@ namespace Grand.Plugin.Payments.Stripe.Validator
             RuleFor(x => x.CardNumber).CreditCard().WithMessage(localizationService.GetResource("Payment.CardNumber.Wrong"));
             RuleFor(x => x.CardCode).Matches(@"^[0-9]{3,4}$").WithMessage(localizationService.GetResource("Payment.CardCode.Wrong"));
             RuleFor(x => x.ExpireDate).NotEmpty().WithMessage(localizationService.GetResource("Payment.ExpireDate.Required"));
-          }
+        }
     }
 }

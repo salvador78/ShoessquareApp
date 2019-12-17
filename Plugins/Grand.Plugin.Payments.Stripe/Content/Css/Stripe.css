@@ -425,3 +425,9 @@
         -webkit-transform: rotateY(180deg);
         transform: rotateY(180deg);
     }
+@media only screen and (max-width: 600px) {
+    .drinkcard-cc {
+        width:60px;
+        height:60px
+    }
+}
