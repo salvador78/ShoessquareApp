@@ -4,6 +4,9 @@
     width: calc(100vw - 10px);
 
 }
+    #GrandCarousel .slide-header{
+        font-size:4rem
+    }
 
     #GrandCarousel .carousel-item.img-desc,
     #GrandCarousel .carousel-item.img-desc .carousel-caption {
@@ -160,7 +163,7 @@
 }
 
 @media (max-width: 767px) {
-    #GrandCarousel {
-       
+    #GrandCarousel .slide-header {
+        font-size: 2rem
     }
 }
