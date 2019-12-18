@@ -7,13 +7,6 @@
 <partial name="_OldInternetExplorerWarning" />
 <main class="c-offcanvas-content-wrap" role="main">
     <partial name="Header" />
-    <nav class="navbar mainNav navbar-expand-sm offcanvas-desktop">
-        <div class="navbar-collapse container">
-            <ul class="navbar-nav navbar-center">
-                @await Component.InvokeAsync("TopMenu")
-            </ul>
-        </div>
-    </nav>
     <div class="container page-container">
         @await Component.InvokeAsync("Widget", new { widgetZone = "content_before" })
         @if (IsSectionDefined("Breadcrumb"))
@@ -49,7 +42,7 @@
 <aside class="js-offcanvas mobile-filters" data-offcanvas-options='{"modifiers":"left,overlay","modal":true,"resize":true}' id="leftSide" role="complementary"></aside>
 @await Component.InvokeAsync("FlyoutShoppingCart")
 <!-- Search Modal -->
-<div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
         </div>

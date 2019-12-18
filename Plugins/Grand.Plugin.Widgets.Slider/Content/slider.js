@@ -49,8 +49,8 @@ function SliderPosition() {
 
     var $item = $('.carousel-item');
 
-    var $mainNavHeight = $('.mainNav ').height();
-    var $headerHeight = $('header').height() + $mainNavHeight + 70;
+    var $mainNavHeight = $('.bmMainNav').height();
+    var $headerHeight = $('header').height() + $mainNavHeight + 10;
    
     var $wHeight = $(window).height() - $headerHeight;
     $item.height($wHeight); 

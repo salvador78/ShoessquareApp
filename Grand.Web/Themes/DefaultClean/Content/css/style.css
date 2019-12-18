@@ -23,11 +23,12 @@
 }*/
 
 /* Colors:
-    grey:#696969
+    grey:#f7f7f7
     grey-hover:#808080
-    black: #333
-    red:#CD3201
-    red-hover:#EB2C1E
+    black: #000
+    black-hover: #333
+    red:#ee4266
+    red-hover:#e81541
 */
 @font-face {
     font-family: 'Poppins';
@@ -430,10 +431,12 @@ span.rotate {
 	overflow: hidden !important;
 	width: 100%;
 }
+#searchModal[style] {
+    padding-right: 0 !important;
+}
 .modal-open {
-	overflow-y: auto;
-    overflow-x: hidden;
-	padding-right: 0 !important;
+    overflow:auto;
+    padding-right: 0 !important;
 }
 .navbar-nav .dropdown-menu {
     position: absolute;
@@ -537,8 +540,9 @@ span.rotate {
 /*search*/
 
 .headBottom {
-	position: relative;
-    padding:10px 0
+    position: relative;
+    padding: 10px 0;
+    justify-content:space-between
 }
 .headBottom .formSearch {
 	transition: all .3s ease;
@@ -563,7 +567,8 @@ body:not(.is-ready) .search-box-button {
 	width: 100%;
 }
 .search-box-select {
-	max-width: 120px;
+    max-width: 120px;
+    height: calc(2.25rem + 10px)
 }
 .advanced-search {
     display:none;
@@ -1062,10 +1067,10 @@ nav .nav-item.list-inline {
 	min-width: 40px;
 }
 .navUp {
-	z-index: 1031;
-	height: 43px;
-	border-bottom: 1px solid #ddd;
-	background: #fff;
+    z-index: 1031;
+    height: 43px;
+    border-bottom: 1px solid #ddd;
+    background: #f7f7f7;
 }
 /*main - category nav - mainNav*/
 
@@ -1108,6 +1113,7 @@ nav .nav-item.list-inline {
 	text-transform: uppercase;
 	font-size: 19px;
 }
+
 .mainNav {
     clear: both;
     z-index: 998;
@@ -4828,7 +4834,7 @@ footer .socicon-pinterest:hover {
 	#searchModal .search-box-select {
 		max-width: 180px;
 		width: auto;
-		height: 52px;
+		height:calc(2.25rem + 10px);
 		border-top: 0;
 		border-bottom: 0;
 		border-left: 1px solid #9da6b2;
@@ -5537,9 +5543,10 @@ footer .socicon-pinterest:hover {
 	#ModalAddToCart .modal-dialog {
 		min-width: auto;
 	}
-	#searchModal .search-box-select {
-		max-width: 120px;
-	}
+    #searchModal .search-box-select {
+        max-width: 120px;
+        height: calc(2.25rem + 10px)
+    }
 	.subrow .qty-input {
 		margin-top: 0;
 		margin-left: 21px;
@@ -5641,13 +5648,13 @@ footer .socicon-pinterest:hover {
 		border-bottom-left-radius: 5px !important;
 		border-bottom-right-radius: 5px !important;
 	}
-	#searchModal .search-box-select {
-		max-width: 90px;
-		height: 52px;
-		border-top: 0;
-		border-bottom: 0;
-		border-left: 1px solid #9da6b2;
-	}
+    #searchModal .search-box-select {
+        max-width: 90px;
+        height: calc(2.25rem + 10px);
+        border-top: 0;
+        border-bottom: 0;
+        border-left: 1px solid #9da6b2;
+    }
 	.wishlist-content .btn-section .btn {
 		width: 100%;
 	}

@@ -1,6 +1,14 @@
 ﻿@model ShoppingCartLinksModel
 <div class="d-inline-flex align-items-center">
     <ul class="shopping-links">
+        <li class="nav-item mobile-search">
+            <div data-toggle="modal" data-target="#searchModal">
+                <a class="nav-link">
+                    <span class="mdi mdi-magnify"></span>
+                </a>
+               
+            </div>
+        </li>
         @if (Model.WishlistEnabled)
         {
             <li class="nav-item wishlist-container">

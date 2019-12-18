@@ -28,15 +28,20 @@
             @await Component.InvokeAsync("HeaderLinks")
         </ul>
     </nav>
-    <div class="container d-none d-sm-block ">
+    <div class="container d-none d-lg-block ">
         <div class="headBottom d-flex align-items-center d-lg-inline-flex text-lg-left text-center mt-0 mb-0">
             <div class="header-logo pr-0 pl-0 d-lg-inline-flex align-items-center d-none">
                 @await Component.InvokeAsync("Logo")
             </div>
-            <div class="col formSearch ml-auto pr-0 d-none d-lg-inline-flex align-items-end">
-                @await Component.InvokeAsync("SearchBox")            
-            </div>    
+            <nav class="navbar bmMainNav navbar-expand-sm offcanvas-desktop">
+                <div class="navbar-collapse container">
+                    <ul class="navbar-nav navbar-center">
+                        @await Component.InvokeAsync("TopMenu")
+                    </ul>
+                </div>
+            </nav>
             @await Component.InvokeAsync("ShoppingCartLinks")
         </div>
     </div>
+    <div class="d-none">@await Component.InvokeAsync("SearchBox")</div>
 </header>
