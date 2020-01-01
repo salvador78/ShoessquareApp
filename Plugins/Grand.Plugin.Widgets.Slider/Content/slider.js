@@ -49,8 +49,8 @@ function SliderPosition() {
 
     var $item = $('.carousel-item');
 
-    var $mainNavHeight = $('.bmMainNav').height();
-    var $headerHeight = $('header').height() + $mainNavHeight + 10;
+    var $mainNavHeight = $('.headBottom ').height();
+    var $headerHeight = $('.navbar ').height() + $mainNavHeight;
    
     var $wHeight = $(window).height() - $headerHeight;
     $item.height($wHeight); 
@@ -58,3 +58,12 @@ function SliderPosition() {
     var FixSliderPos = $('.custom-container').position().left + 'px';
     $('#GrandCarousel').css('left', '-' + FixSliderPos);
 }
+function getOrientation(){
+    return Math.abs(window.orientation) - 90 == 0 ? "landscape" : "portrait";
+};
+function getMobileWidth(){
+    return getOrientation() == "landscape" ? screen.availHeight : screen.availWidth;
+};
+function getMobileHeight(){
+    return getOrientation() == "landscape" ? screen.availWidth : screen.availHeight;
+};

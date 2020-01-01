@@ -1,4 +1,4 @@
-﻿.cc-selector input {
+﻿.cc-selector input[type=radio] {
     margin: 0;
     padding: 0;
     -webkit-appearance: none;

@@ -105,7 +105,7 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 a {
-    color: #333;
+    color: #000;
 }
     a:hover {
         color: #696969;
@@ -291,8 +291,8 @@ input {
     border-color: #637DB1;
 }
 .btn-info {
-    background-color: #cd3201;
-    border-color: #cd3201;
+    background-color: #e81541;
+    border-color: #e81541;
 }
     .btn-info:hover {
         background-color: #EB2C1E;
@@ -528,7 +528,7 @@ span.rotate {
     transition: opacity 0.3s ease-out;
     opacity: 0;
     z-index: 997;
-    background: #cd3201;
+    background: #e81541;
     color: #fff;
 }
 #back-to-top .mdi {
@@ -1069,7 +1069,6 @@ nav .nav-item.list-inline {
 .navUp {
     z-index: 1031;
     height: 43px;
-    border-bottom: 1px solid #ddd;
     background: #f7f7f7;
 }
 /*main - category nav - mainNav*/
@@ -1238,7 +1237,6 @@ nav .nav-item.list-inline {
 /*header*/
 header {
     padding-top: 43px;
-    border-bottom: 1px solid #ddd;
 }
  
     header .dropdown-menu .totals {
@@ -3000,14 +2998,18 @@ table th.latest-post {
 /*one page checkout*/
 
 .opc .allow .card-grey {
-	background-color: #61676c;
-	color: #fff;
+	background-color: #fff;
+	color: #000;
 	cursor: pointer;
+    border:none;
+    border-bottom:2px solid #3333
 }
 .opc .active .card-grey {
-	background-color: #cd3201;
-	color: #fff;
-	cursor: pointer;
+    background-color: #fff;
+    color: #000;
+    cursor: pointer;
+    border: none;
+    border-bottom: 2px solid #e81541
 }
 .opc .step-title .card-bodyquote {
 	margin-bottom: 0;
@@ -3607,7 +3609,7 @@ input[type='checkbox'].checkbox-u:checked + label:after {
 #topcartlink .cart-qty,
 .wishlist-qty {
     border-radius: 100%;
-    background: #cd3201;
+    background: #e81541;
     color: #fff;
     font-size: 9px;
     font-weight: 300;
@@ -3901,7 +3903,7 @@ footer .socicon-pinterest:hover {
     border-top-right-radius: 0;
 }
 .header-logo img {
-	width: 65px;
+	width: 160px;
     padding: 5px;
 
 }
@@ -4510,7 +4512,7 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 991px) {
-    .logo-mobile img{ height:45px;}
+    .logo-mobile img{ height: 28px; padding-left: 25px}
     .mobile-desc {
         justify-content: center;
         font-size: 9px;
@@ -4660,7 +4662,8 @@ footer .socicon-pinterest:hover {
     }
     .header-links {
        width: 100vw;
-       border-top:1px solid #ddd
+       border-top:1px solid #ddd;
+       background-color:#fff
     }
     .mobile-menu .nav-item.dropdown > .dropdown-menu {
         display: block;
@@ -4770,17 +4773,17 @@ footer .socicon-pinterest:hover {
 	.mobile-search {
 		margin-left: auto;
 	}
-	#topcartlink .cart-qty {
-		background: #cd3201;
-		color: #fff;
-		position: static;
-		font-size: 11px;
-		width: 18px;
-		height: 18px;
-		top: 2px;
-		left: 14px;
-		position: absolute;
-	}
+    #topcartlink .cart-qty {
+        background: #e81541;
+        color: #fff;
+        position: static;
+        font-size: 11px;
+        width: 18px;
+        height: 18px;
+        top: 2px;
+        left: 14px;
+        position: absolute;
+    }
     .wishlist-qty {
         top: 0;
         left: 20px;
@@ -5049,7 +5052,7 @@ footer .socicon-pinterest:hover {
         width: 180px;
     }
     header {
-        padding-top: 83px;
+        padding-top: 112px;
     }
     .cart-button {
         font-size: 0.7rem

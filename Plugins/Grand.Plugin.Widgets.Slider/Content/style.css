@@ -36,7 +36,7 @@
 
     #GrandCarousel .full-screen {
         background-size: cover;
-        background-position: center bottom;
+        background-position: center;
         background-repeat: no-repeat;
     }
 
@@ -81,8 +81,6 @@
     }
 
     #GrandCarousel .btn {
-        font-size: 18px;
-        font-weight: 500;
         border-width: 2px;
         padding: 10px 20px;
     }
@@ -166,4 +164,21 @@
     #GrandCarousel .slide-header {
         font-size: 2rem
     }
+    
+    #GrandCarousel .slide-header {
+        font-size: 2rem
+    }
+    #GrandCarousel .slide-title {
+        background: rgba(0, 0, 0, 0.4);
+        padding: 10px 20px;
+    }
+        #GrandCarousel .slide-title > p {
+            color: #fff !important;
+            font-size: 1rem !important
+        }
+    #GrandCarousel .btn{
+        font-size: 1rem !important
+    }
+    
 }
+
