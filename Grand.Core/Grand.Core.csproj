@@ -30,7 +30,7 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.1.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.1.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="MongoDB.Bson" Version="2.8.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.8.1" />
     <PackageReference Include="MongoDB.Driver.Core" Version="2.8.1" />
